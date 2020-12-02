@@ -21,19 +21,9 @@ Usage of Shellphish for attacking targets without prior mutual consent is illega
 
 ### Usage:
 ```
-git clone https://github.com/evildevill/emptyphish
-cd emptyphish
-bash emptyphish.sh
+wget https://github.com/evildevill/emptyphish/raw/master/setup
 ```
 <p>
 <img src="https://visitor-badge.laobi.icu/badge?page_id=HackerWaSi" alt="visitor badge"/>
 </p>
-
-
-### Donate!
-Support the authors:
-
-
-
-
 
