@@ -46,6 +46,6 @@ chmod 755 ./build_env/DEBIAN
 chmod 755 ./build_env/DEBIAN/{control,prerm}
 cp -fr scripts/launch.sh ./build_env/$_bin_dir/$_PACKAGE
 chmod 755 ./build_env/$_bin_dir/$_PACKAGE
-cp -fr .github/ .sites/ LICENSE README.md EmptyPhish.sh ./build_env/$_opt_dir
+cp -fr .github/ .sites/ LICENSE README.md emptyphish.sh ./build_env/$_opt_dir
 dpkg-deb --build ./build_env ${PKG_NAME}
 rm -fr ./build_env
