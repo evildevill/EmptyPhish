@@ -32,18 +32,3 @@ else
   sudo apt-get install curl -y
   sudo apt-get install openssh-server -y
   sudo apt-get install git -y
-  
-  read -p "Enter ngrok authentication token (leave blank to skip): " NGROK_AUTH_TOKEN
-  
-  if [ -n "$NGROK_AUTH_TOKEN" ]; then
-    wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -P /tmp
-    unzip /tmp/ngrok-stable-linux-amd64.zip -d /usr/local/bin
-    chmod +x /usr/local/bin/ngrok
-    /usr/local/bin/ngrok authtoken $NGROK_AUTH_TOKEN
-  fi
-  
-  git clone https://gitHub.com/evildevill/emptyphish.git
-  cd emptyphish
-  chmod +x *
-  bash emptyphish.sh
-fi

@@ -1,0 +1,47 @@
+name: 'Build & Push Docker Image'
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # Every Sunday
+  workflow_dispatch:
+
+env:
+  CI: true
+  DOCKER_BUILDKIT: 1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build Image
+        run: |
+          # Build Docker Image for DockerHub
+          docker build --tag evildevill/EmptyPhish:latest .
+
+          # Tag Docker Image for GHCR
+          docker tag evildevill/EmptyPhish:latest ghcr.io/evildevill/EmptyPhish:latest
+
+      - name: Login to GHCR
+        if: github.repository == 'evildevill/EmptyPhish' && github.ref == 'refs/heads/master'
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to DockerHub
+        if: github.repository == 'evildevill/EmptyPhish' && github.ref == 'refs/heads/master'
+        uses: docker/login-action@v2
+        with:
+          username: "htrtech"
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Push
+        if: github.repository == 'evildevill/EmptyPhish' && github.ref == 'refs/heads/master'
+        run: |
+          # Push to DockerHub
+          docker push evildevill/EmptyPhish:latest
+          # Push to GHCR
+          docker push ghcr.io/evildevill/EmptyPhish:latest
