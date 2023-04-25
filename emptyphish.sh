@@ -2,11 +2,11 @@
 
 ##   Emptyphish : 	Automated Phishing Tool
 ##   Author 	: 	Waseem Akram
-##   Version 	: 	2.0
-##   Github 	: 	https://github.com/evildevill/emptyphish
+##   Version 	: 	3.0
+##   Github 	: 	https://github.com/evildevill/EmptyPhish
 
 ## Version
-__version__="2.0"
+__version__="3.0"
 
 ## DEFAULT HOST & PORT
 HOST='127.0.0.1'
