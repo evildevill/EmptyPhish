@@ -2,11 +2,11 @@
 
 ##   Emptyphish : 	Automated Phishing Tool
 ##   Author 	: 	Waseem Akram
-##   Version 	: 	3.0
+##   Version 	: 	3.0.1
 ##   Github 	: 	https://github.com/evildevill/EmptyPhish
 
 ## Version
-__version__="3.0"
+__version__="3.0.1"
 
 ## DEFAULT HOST & PORT
 HOST='127.0.0.1'
@@ -69,27 +69,53 @@ kill_pid() {
 	pkill -f "php|ngrok|cloudflared|loclx"
 }
 
-# Check for a newer release
 check_update() {
-	echo -ne "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Checking for update : "
-	latest_version=$(curl -s "https://api.github.com/repos/evildevill/emptyphish/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
-	if [[ $latest_version != "" ]]; then
-		if [[ $latest_version != $__version__ ]]; then
-			echo -e "${GREEN}New version available : ${ORANGE}$latest_version${WHITE}"
-			echo -e "${GREEN}[${WHITE}+${GREEN}]${CYAN} Updating to latest version..."
-			git pull
-			echo -e "${GREEN}[${WHITE}+${GREEN}]${CYAN} Update successful."
-			echo -e "${GREEN}[${WHITE}+${GREEN}]${CYAN} Restarting tool..."
-			bash emptyphish.sh
-			exit 0
-		else
-			echo -e "${GREEN}No update available."
-			sleep 1
-		fi
-	else
-		echo -e "${RED}Failed to check for update."
-	fi
+
+    echo -ne "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Checking for update : "
+    relase_url='https://api.github.com/repos/evildevill/EmptyPhish/releases/latest'
+    new_version=$(curl -s "${relase_url}" | grep '"tag_name":' | awk -F\" '{print $4}')
+    tarball_url="https://github.com/evildevill/EmptyPhish/archive/refs/tags/${new_version}.tar.gz"
+
+    if [[ $new_version != $__version__ ]]; then
+        echo -ne "${ORANGE}new update found\n"${WHITE}
+        sleep 2
+        echo -ne "\n${GREEN}[${WHITE}+${GREEN}]${ORANGE} Downloading Update..."
+        pushd "$HOME" >/dev/null 2>&1
+        curl --silent --insecure --fail --retry-connrefused \
+            --retry 3 --retry-delay 2 --location --output ".EmptyPhish.tar.gz" "${tarball_url}"
+
+        if [[ -e ".EmptyPhish.tar.gz" ]]; then
+            tar -xf .EmptyPhish.tar.gz -C "$BASE_DIR" --strip-components 1 >/dev/null 2>&1
+            [ $? -ne 0 ] && {
+                echo -e "\n\n${RED}[${WHITE}!${RED}]${RED} Error occured while extracting."
+                reset_color
+                exit 1
+            }
+            rm -f .EmptyPhish.tar.gz
+            popd >/dev/null 2>&1
+            {
+                sleep 3
+                clear
+                banner_small
+            }
+            echo -ne "\n${GREEN}[${WHITE}+${GREEN}] Successfully updated! Run EmptyPhish again\n\n"${WHITE}
+            {
+                reset_color
+                exit 1
+            }
+        else
+            echo -e "\n${RED}[${WHITE}!${RED}]${RED} Error occured while downloading."
+            {
+                reset_color
+                exit 1
+            }
+        fi
+    else
+        echo -ne "${GREEN}EmptyPhish is already up to date\n${WHITE}"
+        sleep .5
+    fi
 }
+
 
 ## Check Internet Status
 check_status() {
